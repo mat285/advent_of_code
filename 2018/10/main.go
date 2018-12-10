@@ -11,12 +11,30 @@ import (
 )
 
 func main() {
-	lines := read()
-	lights := parseLights(lines)
-	part1(lights)
+
+	part1()
 }
 
-func part1(lights []*light) {
+func part1() {
+	lines := read()
+	lights := parseLights(lines)
+
+	found := search(lights)
+
+	lights = parseLights(lines)
+
+	for i := 0; i < found-3; i++ {
+		tick(lights)
+	}
+	for i := 0; i < 6; i++ {
+		plotL(lights, i)
+		tick(lights)
+	}
+}
+
+func hackPart1() {
+	lines := read()
+	lights := parseLights(lines)
 	// manual binary search to find the value #yolo
 	for i := 0; i < 10054; i++ {
 		tick(lights)
@@ -25,6 +43,22 @@ func part1(lights []*light) {
 		plotL(lights, i)
 		tick(lights)
 	}
+}
+
+func search(ls []*light) int {
+	i := 0
+	prev := spread(ls)
+	decreasing := true
+	for decreasing {
+		tick(ls)
+		curr := spread(ls)
+		if curr.x+curr.y > prev.x+prev.y {
+			decreasing = false
+		}
+		prev = curr
+		i++
+	}
+	return i
 }
 
 type point struct {
@@ -44,6 +78,11 @@ func (l lights) Len() int {
 
 func (l lights) XY(i int) (float64, float64) {
 	return float64(l[i].position.x), -float64(l[i].position.y)
+}
+
+func spread(ls []*light) point {
+	max, min := bounds(ls)
+	return point{max.x - min.x, max.y - min.y}
 }
 
 func tick(lights []*light) {
@@ -77,28 +116,29 @@ func normalize(lights []*light, mmx, mmy int) {
 	}
 }
 
-func bounds(lights []*light) (int, int, int, int) {
-	mx := math.MinInt32
-	my := math.MinInt32
+func bounds(lights []*light) (point, point) {
+	var max, min point
+	max.x = math.MinInt32
+	max.y = math.MinInt32
 
-	mmx := math.MaxInt32
-	mmy := math.MaxInt32
+	min.x = math.MaxInt32
+	min.y = math.MaxInt32
 
 	for _, l := range lights {
-		if l.position.x > mx {
-			mx = l.position.x
+		if l.position.x > max.x {
+			max.x = l.position.x
 		}
-		if l.position.y > my {
-			my = l.position.y
+		if l.position.y > max.y {
+			max.y = l.position.y
 		}
-		if l.position.x < mmx {
-			mmx = l.position.x
+		if l.position.x < min.x {
+			min.x = l.position.x
 		}
-		if l.position.y < mmy {
-			mmy = l.position.y
+		if l.position.y < min.y {
+			min.y = l.position.y
 		}
 	}
-	return mx, my, mmx, mmy
+	return max, min
 }
 
 func parseLights(lines []string) []*light {
