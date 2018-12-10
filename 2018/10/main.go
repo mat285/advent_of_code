@@ -43,7 +43,7 @@ func (l lights) Len() int {
 }
 
 func (l lights) XY(i int) (float64, float64) {
-	return float64(l[i].position.x), float64(l[i].position.y)
+	return float64(l[i].position.x), -float64(l[i].position.y)
 }
 
 func tick(lights []*light) {
