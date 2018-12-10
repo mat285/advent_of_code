@@ -126,7 +126,9 @@ func (c *circle) removeCurrent() int {
 func (c *circle) addClockwise(val int) {
 	n := &node{val: val}
 	if c.current == nil {
-		c.addFirst(n)
+		c.current = n
+		n.next = n
+		n.prev = n
 		return
 	}
 	n.prev = c.current
@@ -134,15 +136,4 @@ func (c *circle) addClockwise(val int) {
 	c.current.next.prev = n
 	c.current.next = n
 	c.current = n
-}
-
-func (c *circle) addCounterClockwise(val int) {
-	c.moveCounterClockwise(1)
-	c.addClockwise(val)
-}
-
-func (c *circle) addFirst(n *node) {
-	c.current = n
-	n.next = n
-	n.prev = n
 }
