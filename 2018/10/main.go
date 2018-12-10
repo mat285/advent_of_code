@@ -19,7 +19,8 @@ func part1() {
 	lines := read()
 	lights := parseLights(lines)
 
-	found := search(lights)
+	found := search(lights, spread)
+	fmt.Println(found)
 
 	lights = parseLights(lines)
 
@@ -45,14 +46,14 @@ func hackPart1() {
 	}
 }
 
-func search(ls []*light) int {
+func search(ls []*light, metric func([]*light) float64) int {
 	i := 0
-	prev := spread(ls)
+	prev := metric(ls)
 	decreasing := true
 	for decreasing {
 		tick(ls)
-		curr := spread(ls)
-		if curr.x+curr.y > prev.x+prev.y {
+		curr := metric(ls)
+		if prev < curr {
 			decreasing = false
 		}
 		prev = curr
@@ -80,9 +81,31 @@ func (l lights) XY(i int) (float64, float64) {
 	return float64(l[i].position.x), -float64(l[i].position.y)
 }
 
-func spread(ls []*light) point {
+func spread(ls []*light) float64 {
 	max, min := bounds(ls)
-	return point{max.x - min.x, max.y - min.y}
+	return float64(max.x - min.x + max.y - min.y)
+}
+
+func avgSpread(ls []*light) float64 {
+	sum := 0.0
+	for i := 0; i < len(ls); i++ {
+		sum += avgDist(ls, i)
+	}
+	return sum / float64(len(ls))
+}
+
+func avgDist(ls []*light, i int) float64 {
+	sum := 0.0
+	for j := 0; j < len(ls); j++ {
+		if j != i {
+			sum += dist(ls[i].position, ls[j].position)
+		}
+	}
+	return sum / float64(len(ls)-1)
+}
+
+func dist(p1, p2 point) float64 {
+	return math.Sqrt(math.Pow(float64(p1.x-p2.x), 2) + math.Pow(float64(p1.y-p2.y), 2))
 }
 
 func tick(lights []*light) {
