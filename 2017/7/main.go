@@ -36,21 +36,33 @@ type entry struct {
 	children []string
 }
 
+func (n *node) wrongNode() *node {
+	if len(n.children) == 0 {
+		return nil
+	}
+	values := map[int][]*node{}
+	for _, child := range n.children {
+		v := child.value()
+		values[v] = append(values[v], child)
+	}
+	if len(values) == 1 {
+		return nil
+	}
+	for _, arr := range values {
+		if len(arr) == 1 {
+
+			break
+		}
+	}
+	return nil
+}
+
 func (n *node) value() int {
 	sum := n.weight
 	for _, c := range n.children {
 		sum += c.value()
 	}
 	return sum
-}
-
-func (n *node) unbalanced() *node {
-	values := map[int][]*node{}
-	for _, c := range n.children {
-		v := c.value()
-		values[v] = append(values[v], c)
-	}
-	return nil
 }
 
 func buildTree(entries []*entry) *node {
