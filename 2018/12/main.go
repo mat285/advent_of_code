@@ -61,7 +61,7 @@ func part2(rs []*rule) {
 		prev = s
 	}
 	curr := sum(head)
-	curr += (50000000000 - i - 1) * 72
+	curr += (50000000000 - i - 1) * change
 	fmt.Println(curr)
 }
 
