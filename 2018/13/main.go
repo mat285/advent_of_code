@@ -45,7 +45,6 @@ func main() {
 func part1(lines []string) {
 	ts, cs := parse(lines)
 	var coll *point
-	printT(ts, cs, nil)
 	count := 0
 	for coll == nil {
 		sort.Slice(cs, func(i, j int) bool {
@@ -127,10 +126,12 @@ func printT(ts [][]*track, cs []*cart, coll *point) {
 					printed = true
 				}
 			}
-			if a != nil && !printed {
-				fmt.Print(a.v)
-			} else if printed {
+			if printed {
 				continue
+			}
+
+			if a != nil {
+				fmt.Print(a.v)
 			} else {
 				fmt.Print(" ")
 			}
@@ -155,32 +156,32 @@ func (c *cart) move(ts [][]*track) {
 	}
 	// set direction
 	switch ts[c.pos.y][c.pos.x].v {
-	case vert:
-		break
-	case horz:
+	case vert, horz:
 		break
 	case crdr:
-		if c.direction == up {
+		switch c.direction {
+		case up:
 			c.direction = left
-		} else if c.direction == down {
+		case down:
 			c.direction = right
-		} else if c.direction == left {
+		case left:
 			c.direction = up
-		} else if c.direction == right {
+		case right:
 			c.direction = down
-		} else {
+		default:
 			panic("uh oh spaghettios")
 		}
 	case crur:
-		if c.direction == down {
+		switch c.direction {
+		case down:
 			c.direction = left
-		} else if c.direction == up {
+		case up:
 			c.direction = right
-		} else if c.direction == right {
+		case right:
 			c.direction = up
-		} else if c.direction == left {
+		case left:
 			c.direction = down
-		} else {
+		default:
 			panic("some t not goos")
 		}
 	case inter:
@@ -223,6 +224,10 @@ func (c *cart) turn() string {
 		c.prev = right
 	}
 	return c.prev
+}
+
+func (p point) String() string {
+	return fmt.Sprintf("(%d,%d)", p.x, p.y)
 }
 
 func collision(c *cart, cs []*cart) *point {
