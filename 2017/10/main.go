@@ -15,14 +15,14 @@ func main() {
 
 func part1(input []byte) {
 	r := newRing(iter(256))
-	for _, i := range input {
-		r.act(i)
-	}
+	r.round(input)
 	fmt.Println(int(r.buf[0]) * int(r.buf[1]))
 }
 
 func part2() {
-	fmt.Println(Hash(""))
+	str := asString(lengths)
+	fmt.Println(str)
+	fmt.Println(Hash(str))
 }
 
 func asString(input []byte) string {
@@ -60,10 +60,10 @@ func newRing(buf []byte) *ring {
 func (r *ring) dense() []byte {
 	ret := make([]byte, 16)
 	for i := 0; i < len(r.buf); i++ {
+		idx := i / 16
 		if i%16 == 0 {
-			ret[i%16] = r.buf[i]
+			ret[idx] = r.buf[i]
 		} else {
-			idx := i / 16
 			ret[idx] ^= r.buf[i]
 		}
 	}
