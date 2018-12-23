@@ -21,6 +21,24 @@ func part1(lines []string) {
 
 func part2(lines []string) {
 	bots := parseNanobots(lines)
+	zero := point{0, 0, 0}
+	dir := 0
+	min := searchDirection(bots, dir)
+	dir++
+	for ; dir < 6; dir++ {
+		test := searchDirection(bots, dir)
+		if inRangePoint(&min, bots) < inRangePoint(&test, bots) {
+			min = test
+		} else if inRangePoint(&min, bots) == inRangePoint(&test, bots) {
+			if distance(test, zero) < distance(min, zero) {
+				min = test
+			}
+		}
+	}
+	fmt.Println(distance(min, zero))
+}
+
+func searchDirection(bots []*nanobot, initial int) point {
 	pos := point{0, 0, 0}
 	curr := inRangePoint(&pos, bots)
 	scale := 1
@@ -33,7 +51,7 @@ func part2(lines []string) {
 		point{0, -1, 0},
 		point{-1, 0, 0},
 	}
-	dir := 0
+	dir := initial
 	i := 0
 	for i < 100000 {
 		// check the point in the next direction
@@ -61,8 +79,7 @@ func part2(lines []string) {
 		}
 		i++
 	}
-	fmt.Println(distance(pos, point{0, 0, 0}))
-
+	return pos
 }
 
 type point struct{ x, y, z int }
