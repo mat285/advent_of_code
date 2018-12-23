@@ -26,30 +26,34 @@ func part2(lines []string) {
 	scale := 1
 	checks := 0
 	pts := []point{
-		point{0, 0, 1},
 		point{0, 1, 0},
+		point{0, 0, 1},
 		point{1, 0, 0},
 		point{0, 0, -1},
 		point{0, -1, 0},
 		point{-1, 0, 0},
 	}
-	dir := 1
+	dir := 0
 	i := 0
 	for i < 100000 {
+		// check the point in the next direction
 		next := pos.add(pts[dir].scale(scale))
 		vn := inRangePoint(&next, bots)
 		if vn < curr {
 			if scale == 1 {
+				// if worse, look in another direction if we at 1
 				dir = (dir + 1) % len(pts)
 				checks++
 				if checks > len(pts) {
 					break
 				}
 			} else {
+				// cut the scale in half, we overshot
 				scale /= 2
 				checks = 0
 			}
 		} else {
+			// if its equal or better then keep searching this direction but twice as far
 			pos = next
 			curr = vn
 			scale *= 2
