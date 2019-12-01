@@ -82,6 +82,28 @@ func search(grid [][]regionType, target *point) int {
 		}
 	}
 
+	visited := map[triple]bool{}
+	curr := triple{point{0, 0}, torch}
+	m[curr.y][curr.x][curr.e] = 0
+
+	for {
+		adj := adjacent(curr.point)
+		neighbors := []triple{}
+		for _, a := range adj {
+			for _, e := range equipments {
+				neighbors = append(neighbors, triple{point: a, e: e})
+			}
+		}
+		for _, n := range neighbors {
+			if visited[n] {
+				continue
+			}
+			if validFor(grid[n.y][n.x], curr.e) {
+
+			}
+		}
+	}
+
 	m[target.y][target.x][torch] = 0             // torch done
 	m[target.y][target.x][climbing] = changeCost // climbing must change
 
