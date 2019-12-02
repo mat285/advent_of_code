@@ -41,7 +41,6 @@ func part2(lines []string) {
 			}
 		}
 	}
-
 }
 
 func toInt(lines []string) []int {
