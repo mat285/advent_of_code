@@ -27,10 +27,11 @@ func part1(lines []string) {
 }
 
 func part2(lines []string) {
-
+	src := toInt(lines)
 	for x := 0; x <= 99; x++ {
 		for y := 0; y <= 99; y++ {
-			is := toInt(lines)
+			is := make([]int, len(src))
+			copy(is, src)
 			is[1] = x
 			is[2] = y
 			o := run(is)[0]
