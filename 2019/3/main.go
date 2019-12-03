@@ -16,16 +16,15 @@ func main() {
 
 	lines := strings.Split(strings.TrimSpace(string(data)), "\n")
 
-	part1(lines)
-	part2(lines)
-}
-
-func part1(lines []string) {
 	w1 := wire(lines[0])
 	w2 := wire(lines[1])
-
 	ins := intersect(w1, w2)
 
+	part1(w1, w2, ins)
+	part2(w1, w2, ins)
+}
+
+func part1(w1, w2, ins []point) {
 	min := math.MaxInt32
 	for _, i := range ins {
 		d := dist(i, point{0, 0})
@@ -36,12 +35,7 @@ func part1(lines []string) {
 	fmt.Println(min)
 }
 
-func part2(lines []string) {
-	w1 := wire(lines[0])
-	w2 := wire(lines[1])
-
-	ins := intersect(w1, w2)
-
+func part2(w1, w2, ins []point) {
 	min := math.MaxInt32
 
 	for _, i := range ins {
@@ -59,7 +53,7 @@ type point struct{ x, y int }
 
 func stepsTo(p point, w []point) int {
 	for i, wp := range w {
-		if wp.x == p.x && wp.y == p.y {
+		if eq(wp, p) {
 			return i + 1
 		}
 	}
@@ -75,6 +69,10 @@ func abs(i int) int {
 		return -i
 	}
 	return i
+}
+
+func eq(p1, p2 point) bool {
+	return p1.x == p2.x && p1.y == p2.y
 }
 
 func hash(p point) string {
