@@ -37,16 +37,13 @@ func part1(w1, w2, ins []point) {
 
 func part2(w1, w2, ins []point) {
 	min := math.MaxInt32
-
 	for _, i := range ins {
 		v := stepsTo(i, w1) + stepsTo(i, w2)
 		if v < min {
 			min = v
 		}
 	}
-
 	fmt.Println(min)
-
 }
 
 type point struct{ x, y int }
