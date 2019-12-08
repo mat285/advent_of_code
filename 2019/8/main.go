@@ -37,9 +37,7 @@ func part1(input string) {
 			minL = layer
 		}
 	}
-
 	fmt.Println(count(minL, 1) * count(minL, 2))
-
 }
 
 func part2(input string) {
@@ -92,18 +90,14 @@ func count(layer [][]int, i int) int {
 }
 
 func parse(input string, w, h int) [][][]int {
-	num := len(input) / (w * h)
-
-	layers := make([][][]int, num)
+	layers := make([][][]int, len(input)/(w*h))
 	for z := 0; z < len(layers); z++ {
 		layers[z] = make([][]int, h)
 		for y := 0; y < len(layers[z]); y++ {
 			layers[z][y] = make([]int, w)
 		}
 	}
-	x := 0
-	y := 0
-	z := 0
+	var x, y, z int
 	for _, c := range input {
 		d, _ := strconv.Atoi(string(c))
 		layers[z][y][x] = d
